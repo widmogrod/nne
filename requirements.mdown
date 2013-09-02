@@ -27,6 +27,8 @@
 	- be usable via JS library on one of implementations in different languages
 	- should be possibility to import this model to A.N.N.E
 
+- Possibility to write plugins to watch how is working your model snapshot which your application, game
+
 - Neural net implementation should be Open Source
 
 - First version should be written in JS
