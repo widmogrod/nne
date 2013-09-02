@@ -1,0 +1,61 @@
+# Artificial Neural Net Editor
+## Requirements
+
+- Visual editor in which you can design NN
+	- Must be accessible through modern web browser
+	- Must be easy to use, allow manipulations of layers, neurons through selecting, copying,...
+	- Allow save, undo changes
+	- Have possibility to share models, results, projects (collaboration)
+
+- Learning should allow to:
+	- Run learning in background as WebBrowser Worker
+	- Run learning on server
+	- Distribute learning across other users (WebSocets)
+	- Store NN project informations like: input data, test data
+	- Visualize learning process; plot of learning error;....
+	- Play, stop, rewind best NN
+	- Should be ease do export end use in different context
+
+- Visualization of the learning should
+	- allow to look inside NN and see whats net has learn
+
+- Distributed learning should
+	- Merge different models (Method should be possible to select ?)
+	- Distribute best performing models
+
+- Exporting model should
+	- be usable via JS library on one of implementations in different languages
+	- should be possibility to import this model to A.N.N.E
+
+- Neural net implementation should be Open Source
+
+- First version should be written in JS
+
+## Crucial elements
+
+- Play, pause, stop, save, load
+- Work in background process (WebWorker & Server)
+- Visualization of the learning error
+- Visualization of the state; features
+
+## Architecture
+
+```
+	State 1:							State 2:
+
+|---------------|			  		|----------------|
+| Visual Editor |			|-------| Learning Model |
+|---------------|			|		|----------------|
+	|						|			|
+	|						|			|
+|-----|						|		|-------------|
+| API |	--------------------|		| Sync Models |
+|-----|								|-------------|
+	|									|
+	|							-------------------------
+	|		    				|						|
+|----------|    			|------------|		|---------------|
+|	DB	   |    			| Web Worker |		| Server Worker |
+|----------|    			|------------|		|---------------|
+
+```
