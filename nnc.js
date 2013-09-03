@@ -25,20 +25,23 @@
 
 })();
 
+/**
+ * More abstract, configuration base ANN builder concept
+ */
 (function() {
     var topography = [
         {
             name: 'persons',
             number: 24,
-            layer: [
+            connection: [
                 {
                     name: 'distributed_person',
                     number: 6,
-                    layer: [
+                    connection: [
                         {
                             name: 'merging',
                             number: 6,
-                            layer: [
+                            connection: [
                                 {
                                     name: 'output',
                                     number: 24
@@ -52,11 +55,11 @@
         {
             name: 'relation',
             number: 12,
-            layer: [
+            connection: [
                 {
                     name: 'distriuted_relation',
                     number: 24,
-                    layer: [
+                    connection: [
                         {@ref: 'merging'}
                     ]
                 }
@@ -66,6 +69,7 @@
 
     var options = {
         'momentum' : 0.4,
+        'learningRate' : 0.2,
         'bias' : -1
     };
 
@@ -75,7 +79,10 @@
         'output': [0,1,0,0,0,0,0,0,0,0,0,0,0]
     };
 
-    var net = build(topography, options);
+    var net = build(topography);
+        net.options(options);
     var result = net.train(data);
-    result.error
+    result.errorRate;
+
+    net.weights(); // weights
 })();
