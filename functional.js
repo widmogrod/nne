@@ -12,21 +12,42 @@
     function forEach(data, func) {
         var i, length = data.length;
         for (i = 0; i < length; i++) {
-            func(data[i]);
+            func(data[i], i);
         }
     }
 
     function map(data, func) {
+         var result = [];
+         forEach(data, function(item){
+             result.push(func(item));
+         });
+         return result;
+    }
+
+    function apply() {
         var result = [];
-        forEach(data, function(item){
-            result.push(func(item));
+        var data = slice(arguments, 0, -1)[0];
+        var func = slice(arguments, -1)[0];
+        forEach(data, function(item, key){
+            var args = filter(data, function(v, k) {
+                return key === k;
+            });
+            result.push(func.apply(null, args));
         });
         return result;
     }
 
-    function partial(func) {
+    function curry(func) {
+        var count = fargsc(func);
         var args = slice(arguments, 1);
-        return function() {
+        if (!count)  {
+            return func;
+        }
+        if (args.length < count) {
+            return function() {
+                return curry.apply(null, [func].concat(args, slice(arguments)));
+            }
+        } else {
             return func.apply(null, args.concat(slice(arguments)));
         }
     }
@@ -41,18 +62,6 @@
         }
     }
 
-    function curry(func) {
-        var count = fargsc(func);
-        var args = slice(arguments, 1);
-        if (args.length < count) {
-            return function() {
-                return curry.apply(null, [func].concat(args, slice(arguments)));
-            }
-        } else {
-            return func.apply(null, args.concat(slice(arguments)));
-        }
-    }
-
     function reduce(data, func, result) {
         forEach(data, function(item) {
             result = func(item, result);
@@ -60,8 +69,18 @@
         return result;
     }
 
+    function filter(data, func) {
+        var result = [];
+        forEach(data, function(item, i) {
+            if (func(item, i)) {
+                result.push(item);
+            }
+        });
+        return result;
+    }
+
     function fargsc(func) {
-        var args = func.toString().match(/^function[^\(]*\(([^\)]*)\)/i)[1].replace(/[^,]/, '');
+        var args = func.toString().match(/^function[^\(]*\(([^\)]*)\)/i)[1];
         return args.length ? args.split(',').length : 0;
     }
 
@@ -88,12 +107,12 @@
     // in alphabetical order
     exports.compose  = compose;
     exports.curry    = curry;
+    exports.fargsc   = fargsc;
+    exports.filter   = filter;
     exports.forEach  = forEach;
     exports.is       = is;
     exports.map      = map;
     exports.mv       = mv;
-    exports.fargsc   = fargsc;
-    exports.partial  = partial;
     exports.reduce   = reduce;
     exports.rfunc    = rfunc;
     exports.slice    = slice;
