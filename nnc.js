@@ -33,15 +33,15 @@
         {
             name: 'persons',
             number: 24,
-            connection: [
+            connections: [
                 {
                     name: 'distributed_person',
                     number: 6,
-                    connection: [
+                    connections: [
                         {
                             name: 'merging',
                             number: 6,
-                            connection: [
+                            connections: [
                                 {
                                     name: 'output',
                                     number: 24
@@ -55,11 +55,11 @@
         {
             name: 'relation',
             number: 12,
-            connection: [
+            connections: [
                 {
                     name: 'distriuted_relation',
                     number: 24,
-                    connection: [
+                    connections: [
                         {@ref: 'merging'}
                     ]
                 }
@@ -68,15 +68,15 @@
     ];
 
     var options = {
-        'momentum' : 0.4,
-        'learningRate' : 0.2,
-        'bias' : -1
+        momentum : 0.4,
+        learningRate : 0.2,
+        bias : -1
     };
 
     var data = {
-        'persons' : [0,0,0,0,0,0,0,0,0,0,0,0,1],
-        'relation' : [0,0,0,0,0,1],
-        'output': [0,1,0,0,0,0,0,0,0,0,0,0,0]
+        persons : [0,0,0,0,0,0,0,0,0,0,0,0,1],
+        relation : [0,0,0,0,0,1],
+        output: [0,1,0,0,0,0,0,0,0,0,0,0,0]
     };
 
     var net = build(topography);
