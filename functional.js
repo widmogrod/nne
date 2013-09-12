@@ -16,27 +16,36 @@
         }
     }
 
-    function map(data, func) {
-         var result = [];
-         forEach(data, function(item){
-             result.push(func(item));
-         });
-         return result;
+    // ([1, 2, 3], +1) -> [2, 3, 4]
+    // function map(data, func) {
+    //      var result = [];
+    //      forEach(data, function(item){
+    //          result.push(func(item));
+    //      });
+    //      return result;
+    // }
+
+    function get(key) {
+        return function (obj) {
+            return obj[key];
+        }
     }
 
-    function apply() {
+    // ([1, 2, 3], +1) -> [2, 3, 4]
+    // ([1, 2, 3], [3, 4, 6], +) -> [4, 6, 9]
+    function map(data, func) {
+        data = slice(arguments, 0, -1);
+        func = slice(arguments, -1)[0];
         var result = [];
-        var data = slice(arguments, 0, -1)[0];
-        var func = slice(arguments, -1)[0];
-        forEach(data, function(item, key){
-            var args = filter(data, function(v, k) {
-                return key === k;
-            });
-            result.push(func.apply(null, args));
+        forEach(data, function(item, index){
+            forEach(item, function(value, idx) {
+                result[idx] = result[idx] ? result[idx](value) : curry(func, value);
+            })
         });
         return result;
     }
 
+    // (function(a, b, c, d)) -> (a)(b)(c)(d)
     function curry(func) {
         var count = fargsc(func);
         var args = slice(arguments, 1);

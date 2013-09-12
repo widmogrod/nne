@@ -18,6 +18,33 @@ describe('Functional', function(){
                 return f.slice(arguments)
             })(1,2,3).should.be.Array
         })
+        it('should return item in array when begin and end is passed', function(){
+            [1,2,3].slice(-1).should.be.eql([3]);
+            [1,2,3].slice(2).should.be.eql([3]);
+            [1,2,3].slice(0, -1).should.be.eql([1, 2]);
+
+            f.slice([1,2,3], -1    ).should.be.eql([3]);
+            f.slice([1,2,3],  2    ).should.be.eql([3]);
+            f.slice([1,2,3],  0, -1).should.be.eql([1, 2]);
+        })
+        it('should return null when splice on empty array', function(){
+            [].slice(-1).should.be.eql([]);
+            [].slice(2).should.be.eql([]);
+            [].slice(0, -1).should.be.eql([]);
+
+            f.slice([], -1    ).should.be.eql([]);
+            f.slice([],  2    ).should.be.eql([]);
+            f.slice([],  0, -1).should.be.eql([]);
+        })
+        it('should return null when splice on empty array', function(){
+            [1].slice(-1).should.be.eql([1]);
+            [1].slice(2).should.be.eql([]);
+            [1].slice(0, -1).should.be.eql([]);
+
+            f.slice([1], -1    ).should.be.eql([1]);
+            f.slice([1],  2    ).should.be.eql([]);
+            f.slice([1],  0, -1).should.be.eql([]);
+        })
     })
     describe('#fargsc()', function(){
         it('should return number of arguments in function when function is passed', function(){
@@ -46,6 +73,11 @@ describe('Functional', function(){
             f.map([1, 2, 3], function(i) {
                 return i + 1;
             }).should.be.eql([2, 3, 4]);
+        })
+        it('should return array with values added', function(){
+            f.map([1, 2, 3], [3, 4, 5], function(a, b) {
+                return a + b;
+            }).should.be.eql([4, 6, 8]);
         })
     })
     describe('#curry()', function(){
