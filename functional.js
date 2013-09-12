@@ -16,15 +16,6 @@
         }
     }
 
-    // ([1, 2, 3], +1) -> [2, 3, 4]
-    // function map(data, func) {
-    //      var result = [];
-    //      forEach(data, function(item){
-    //          result.push(func(item));
-    //      });
-    //      return result;
-    // }
-
     function get(key) {
         return function (obj) {
             return obj[key];
@@ -37,7 +28,7 @@
         data = slice(arguments, 0, -1);
         func = slice(arguments, -1)[0];
         var result = [];
-        forEach(data, function(item, index){
+        forEach(data, function(item){
             forEach(item, function(value, idx) {
                 result[idx] = result[idx] ? result[idx](value) : curry(func, value);
             })
@@ -103,22 +94,13 @@
         }
     }
 
-    // function next(array, def) {
-    //     if (!array || !is('array', array)) {
-    //         return def;
-    //     }
-    //     if (array.current === undefined) {
-    //         array.current = -1;
-    //     }
-    //     return array.current < array.length ? array[++array.current] : def;
-    // }
-
     // in alphabetical order
     exports.compose  = compose;
     exports.curry    = curry;
     exports.fargsc   = fargsc;
     exports.filter   = filter;
     exports.forEach  = forEach;
+    exports.get      = get;
     exports.is       = is;
     exports.map      = map;
     exports.mv       = mv;

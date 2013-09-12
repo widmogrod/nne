@@ -127,4 +127,15 @@ describe('Functional', function(){
             result.should.be.eql([1, 2]);
         })
     })
+    describe('#get()', function(){
+        it('should return function when arguments is passed', function(){
+            var func = f.get('name');
+            func.should.be.a('function');
+        })
+        it('should return value when arguments is passed and function is invoked on object', function(){
+            var obj = {name: 'test'};
+            var func = f.get('name');
+            func(obj).should.be.eql('test');
+        })
+    })
 });
