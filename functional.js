@@ -22,8 +22,15 @@
         }
     }
 
-    // ([1, 2, 3], +1) -> [2, 3, 4]
-    // ([1, 2, 3], [3, 4, 6], +) -> [4, 6, 9]
+    /**
+     * Map function
+     *
+     * Examples:
+     * map([1, 2, 3], addOne) -> [2, 3, 4]
+     * map([1, 2, 3], [3, 4, 6], addition) -> [4, 6, 9]
+     *
+     * @return []
+     */
     function map(data, func) {
         data = slice(arguments, 0, -1);
         func = slice(arguments, -1)[0];
@@ -84,10 +91,18 @@
         return args.length ? args.split(',').length : 0;
     }
 
-    function rfunc(item) {
+    /**
+     * Return value function
+     * Example: rv(1) -> 1
+     */
+    function rv(item) {
         return item;
     }
 
+    /**
+     * Return monadic value
+     * Example: mv(1) -> f() -> 1
+     */
     function mv(value) {
         return function() {
             return value;
@@ -105,7 +120,7 @@
     exports.map      = map;
     exports.mv       = mv;
     exports.reduce   = reduce;
-    exports.rfunc    = rfunc;
+    exports.rv    = rv;
     exports.slice    = slice;
 
 })(exports || this);
