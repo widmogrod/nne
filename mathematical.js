@@ -3,7 +3,6 @@
 
     // in alphabetical order
     exports.equal           = function(a, b) { return a === b; };
-    exports.notEqual        = function(a, b) { return a !== b; };
     exports.addition        = function(a, b) { return a + b; };
     exports.subtraction     = function(a, b) { return a - b; };
     exports.multiplication  = function(a, b) { return a * b; };
