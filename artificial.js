@@ -1,17 +1,39 @@
 (function(exports){
 
     function activeteNeuron(inputs, weigths, func) {
-        return m.summation(map(inputs, weights, m.multiplication), func);
+        return m.summation(f.apply(m.multiplication, f.transpose([weights, m.multiplication]), func)
+        // return m.summation(map(inputs, weights, m.multiplication), func);
     }
 
     function deltaForNeuron(deltas, weigths) {
-        return m.summation(map(inputs, weights, m.multiplication));
+        return m.summation(f.apply(m.multiplication, f.transpose([weights, m.multiplication]));
+        // return m.summation(map(inputs, weights, m.multiplication));
     }
 
     function newWeights(inputs, weigths, delta, derivative) {
         var number = inputs.length;
-        var descent = map(fill(delta, number), inputs, map(weigths, derivative), m.multiplication);
-        return map(weigths, descent, m.addition);
+        var learningReate = 0.1;
+
+        var deltaVector = fill(delta, number);
+        var learningVector = fill(learningReate, number);
+
+        var derivativeOfActivation = activeteNeuron(inputs, weigths, derivative);
+        var derivativeVector = fill(derivativeOfActivation, number);
+
+        var matrix = [deltaVector, learningVector, derivativeVector, inputs];
+        var multiplicationMatrix = f.transpose(matrix);
+
+        var multiplicateApply = f.curry(f.apply, m.multiplication)
+        var multiplicationVector = map(multiplicationMatrix, multiplicateApply);
+        // var multiplicationResult = multiplicateEach.apply(null, multiplicationMatrix);
+
+        var additionApply = f.curry(f.apply, m.addition);
+        return f.map(
+            f.transpose([weights, multiplicationVector])
+            additionApply
+        );
+        // var descent = map(fill(delta, number), inputs, map(weigths, derivative), m.multiplication);
+        // return map(weigths, descent, m.addition);
     }
 
     inputData = [1, 2];
@@ -29,7 +51,6 @@
         activate = weigths(neuron.weights);
         return activate(neuron.activation);
     })
-
 
     var topography = [
         {
