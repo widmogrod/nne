@@ -22,6 +22,24 @@
         }
     }
 
+    function maybe(value, fn) {
+        return value === null || value === undefined ? value : fn(value)
+    }
+
+    /**
+     * Fill with value n-times array
+     *
+     * Examples:
+     * fill(1, 2) -> [1, 1]
+     */
+    function fill(withValue, nTimes, array) {
+        array = is('array', array) ? array : [];
+        while(nTimes--) {
+            array.push(withValue);
+        }
+        return array;
+    }
+
     /**
      * Map function
      *
@@ -113,14 +131,16 @@
     exports.compose  = compose;
     exports.curry    = curry;
     exports.fargsc   = fargsc;
+    exports.fill      = fill;
     exports.filter   = filter;
     exports.forEach  = forEach;
     exports.get      = get;
     exports.is       = is;
     exports.map      = map;
+    exports.maybe    = maybe;
     exports.mv       = mv;
     exports.reduce   = reduce;
-    exports.rv    = rv;
+    exports.rv       = rv;
     exports.slice    = slice;
 
 })(exports || this);

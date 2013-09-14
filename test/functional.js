@@ -138,4 +138,20 @@ describe('Functional', function(){
             func(obj).should.be.eql('test');
         })
     })
+    describe('#fill()', function(){
+        it('should return data filled with value n-times', function(){
+            f.fill(1, 2).should.be.eql([1,1]);
+            f.fill(1, 2, ['a', 'b']).should.be.eql(['a', 'b', 1,1]);
+        })
+    })
+    describe('#maybe()', function(){
+        it('should return result of function when arguments not null or undefined', function(){
+            var returnValue = function(a) {return 'ok'};
+            f.maybe(0, returnValue).should.be.eql('ok');
+            f.maybe({}, returnValue).should.be.eql('ok');
+
+            f.maybe(null, returnValue).should.be.eql(null);
+            f.maybe(undefined, returnValue).should.be.eql(undefined);
+        })
+    })
 });
