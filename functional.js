@@ -23,7 +23,7 @@
     }
 
     function maybe(value, fn) {
-        return value === null || value === undefined ? value : fn(value)
+        return value === null || value === undefined ? value : fn(value);
     }
 
     /**
@@ -82,25 +82,46 @@
         return array;
     }
 
+    function first(array) {
+        return get(0)(array);
+    }
+
+    /**
+     * Apply arguments to function
+     *
+     * Examples:
+     * apply(addition, [1,2]) -> 3
+     * apply(addition, [1,2], [2,3]) -> [3, 5]
+     */
+    function apply(func, args, more) {
+        func = first(slice(arguments, 0, 1));
+        args = slice(arguments, 1);
+        var result = map(args, function(args) {
+            return func.apply(null, args);
+        });
+        return more ? result : first(result);
+    }
+
     /**
      * Map function
      *
      * Examples:
      * map([1, 2, 3], addOne) -> [2, 3, 4]
-     * map([1, 2, 3], [3, 4, 6], addition) -> [4, 6, 9]
+     * map([1, 2, 3], [2, 3, 6], addOne) -> [[2, 3, 4], [3, 4, 7]]
      *
      * @return []
      */
-    function map(data, func) {
+    function map(data, func, more) {
         data = slice(arguments, 0, -1);
-        func = slice(arguments, -1)[0];
+        func = first(slice(arguments, -1));
         var result = [];
-        forEach(data, function(item){
-            forEach(item, function(value, idx) {
-                result[idx] = result[idx] ? result[idx](value) : curry(func, value);
+        forEach(data, function(item, idx){
+            result[idx] = [];
+            forEach(item, function(value, col) {
+                result[idx][col] = func(value);
             })
         });
-        return result;
+        return more ? result : first(result);
     }
 
     // (function(a, b, c, d)) -> a(b)(c)(d)
@@ -170,6 +191,7 @@
     }
 
     // in alphabetical order
+    exports.apply     = apply;
     exports.compose   = compose;
     exports.curry     = curry;
     exports.fargsc    = fargsc;

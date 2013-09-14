@@ -21,11 +21,15 @@ describe('Functional', function(){
         it('should return item in array when begin and end is passed', function(){
             [1,2,3].slice(-1).should.be.eql([3]);
             [1,2,3].slice(2).should.be.eql([3]);
+            [1,2,3].slice(1).should.be.eql([2,3]);
             [1,2,3].slice(0, -1).should.be.eql([1, 2]);
+            [1,2,3].slice(1, 2).should.be.eql([2]);
 
             f.slice([1,2,3], -1    ).should.be.eql([3]);
             f.slice([1,2,3],  2    ).should.be.eql([3]);
+            f.slice([1,2,3],  1    ).should.be.eql([2,3]);
             f.slice([1,2,3],  0, -1).should.be.eql([1, 2]);
+            f.slice([1,2,3],  1, 2).should.be.eql([2]);
         })
         it('should return null when splice on empty array', function(){
             [].slice(-1).should.be.eql([]);
@@ -64,20 +68,15 @@ describe('Functional', function(){
         })
     })
     describe('#map()', function(){
+        var addOne = function(i) {return i + 1; };
         it('should return array', function(){
-            f.map([1, 2, 3], function(i) {
-                return i;
-            }).should.be.Array;
+            f.map([1, 2, 3], addOne).should.be.Array;
         })
         it('should return array with values incremented by 1', function(){
-            f.map([1, 2, 3], function(i) {
-                return i + 1;
-            }).should.be.eql([2, 3, 4]);
+            f.map([1, 2, 3], addOne).should.be.eql([2, 3, 4]);
         })
         it('should return array with values added', function(){
-            f.map([1, 2, 3], [3, 4, 5], function(a, b) {
-                return a + b;
-            }).should.be.eql([4, 6, 8]);
+            f.map([1, 2, 3], [3, 4, 5], addOne).should.be.eql([[2, 3, 4],[4,5,6]]);
         })
     })
     describe('#curry()', function(){
@@ -165,6 +164,15 @@ describe('Functional', function(){
             };
             f.transpose(['a', 'b', 'c'], callback).should.be.eql([['a:a'],['b:b'],['c:c']]);
             f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']], callback).should.be.eql([['a:a','x:x'],['b:b','y:y'],['c:c','z:z']]);
+        })
+    })
+    describe('#apply()', function(){
+        var func = function(a, b) { return a + b };
+        it('should return result of a function', function(){
+            f.apply(func, [1,2]).should.be.eql(3);
+        })
+        it('should return array of results of a function if more that one argument is passed', function(){
+            f.apply(func, [1,2], [3,4]).should.be.eql([3, 7]);
         })
     })
 });
