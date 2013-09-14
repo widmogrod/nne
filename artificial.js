@@ -1,27 +1,33 @@
 (function(exports){
 
-    // to implement
     function activeteNeuron(inputs, weigths, func) {
         return m.summation(map(inputs, weights, m.multiplication), func);
     }
 
-    data = {
-        inputs: [0,0],
-        outputs: 2,
-    };
+    function deltaForNeuron(deltas, weigths) {
+        return m.summation(map(inputs, weights, m.multiplication));
+    }
+
+    function newWeights(inputs, weigths, delta, derivative) {
+        var number = inputs.length;
+        var descent = map(fill(delta, number), inputs, map(weigths, derivative), m.multiplication);
+        return map(weigths, descent, m.addition);
+    }
+
+    inputData = [1, 2];
 
     inputs = curry(activeteNeuron);
-    weigths = inputs(data.inputs);
+
+    weigths = inputs(inputData);
     outputs = map(nextLayer, function(neuron) {
         activate = weigths(neuron.weights);
-        activate(neuron.activation);
-
+        return activate(neuron.activation);
     })
 
     weigths = inputs(outputs);
     outputs = map(nextLayer, function(neuron) {
         activate = weigths(neuron.weights);
-        activate(neuron.activation);
+        return activate(neuron.activation);
     })
 
 
