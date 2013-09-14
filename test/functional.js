@@ -154,4 +154,17 @@ describe('Functional', function(){
             f.maybe(undefined, returnValue).should.be.eql(undefined);
         })
     })
+    describe('#transpose()', function(){
+        it('should return transposed array if array is passed', function(){
+            f.transpose(['a', 'b', 'c']).should.be.eql([['a'],['b'],['c']]);
+            f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']]).should.be.eql([['a','x'],['b','y'],['c','z']]);
+        })
+        it('should return transposed array with modified mapped values if array and callback is passed', function(){
+            var callback = function(a) {
+                return a + ':' + a;
+            };
+            f.transpose(['a', 'b', 'c'], callback).should.be.eql([['a:a'],['b:b'],['c:c']]);
+            f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']], callback).should.be.eql([['a:a','x:x'],['b:b','y:y'],['c:c','z:z']]);
+        })
+    })
 });

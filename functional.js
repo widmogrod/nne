@@ -27,6 +27,48 @@
     }
 
     /**
+     * Transpose array, optionally apply function on each item;
+     *
+     * Examples:
+     * From:
+     * [
+     *     [a,b],
+     *     [c,d]
+     * ]
+     * To:
+     * [
+     *     [a, c]
+     *     [b, d]
+     * ]
+     *
+     * From:
+     * [a,b,c]
+     * To:
+     * [
+     *     [a],
+     *     [b],
+     *     [c]
+     * ]
+     */
+    function transpose(array, func) {
+        var result = [],
+            func = func || rv;
+
+        forEach(array, function(value, col) {
+            if (!is('array', value)) {
+                result[col] = [func(value)];
+            } else {
+                forEach(value, function(item, idx){
+                    item = func(item);
+                    result[idx] = result[idx] ? result[idx] : [];
+                    result[idx][col] = item;
+                });
+            }
+        });
+        return result;
+    }
+
+    /**
      * Fill with value n-times array
      *
      * Examples:
@@ -61,7 +103,7 @@
         return result;
     }
 
-    // (function(a, b, c, d)) -> (a)(b)(c)(d)
+    // (function(a, b, c, d)) -> a(b)(c)(d)
     function curry(func) {
         var count = fargsc(func);
         var args = slice(arguments, 1);
@@ -128,19 +170,20 @@
     }
 
     // in alphabetical order
-    exports.compose  = compose;
-    exports.curry    = curry;
-    exports.fargsc   = fargsc;
+    exports.compose   = compose;
+    exports.curry     = curry;
+    exports.fargsc    = fargsc;
     exports.fill      = fill;
-    exports.filter   = filter;
-    exports.forEach  = forEach;
-    exports.get      = get;
-    exports.is       = is;
-    exports.map      = map;
-    exports.maybe    = maybe;
-    exports.mv       = mv;
-    exports.reduce   = reduce;
-    exports.rv       = rv;
-    exports.slice    = slice;
+    exports.filter    = filter;
+    exports.forEach   = forEach;
+    exports.get       = get;
+    exports.is        = is;
+    exports.map       = map;
+    exports.maybe     = maybe;
+    exports.mv        = mv;
+    exports.reduce    = reduce;
+    exports.transpose = transpose;
+    exports.rv        = rv;
+    exports.slice     = slice;
 
 })(exports || this);
