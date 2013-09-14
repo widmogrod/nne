@@ -22,6 +22,16 @@
         }
     }
 
+    /**
+     * Return first element from array
+     */
+    function first(array) {
+        return get(0)(array);
+    }
+
+    /**
+     * Evaluate function only when value is defined
+     */
     function maybe(value, fn) {
         return value === null || value === undefined ? value : fn(value);
     }
@@ -80,10 +90,6 @@
             array.push(withValue);
         }
         return array;
-    }
-
-    function first(array) {
-        return get(0)(array);
     }
 
     /**

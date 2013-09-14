@@ -144,13 +144,15 @@ describe('Functional', function(){
         })
     })
     describe('#maybe()', function(){
-        it('should return result of function when arguments not null or undefined', function(){
-            var returnValue = function(a) {return 'ok'};
-            f.maybe(0, returnValue).should.be.eql('ok');
-            f.maybe({}, returnValue).should.be.eql('ok');
-
-            f.maybe(null, returnValue).should.be.eql(null);
-            f.maybe(undefined, returnValue).should.be.eql(undefined);
+        it('should return result of function when arguments are not null or undefined', function(){
+            var returnValue = function(a) {return a};
+            f.maybe(0, returnValue).should.be.eql(0);
+            f.maybe({}, returnValue).should.be.eql({});
+        })
+        it('should return not execute function when arguments are null or undefined', function(){
+            var returnValue = function(a) { should.fail('can\'t call function ')};
+            f.maybe(null, returnValue);
+            f.maybe(undefined, returnValue);
         })
     })
     describe('#transpose()', function(){
