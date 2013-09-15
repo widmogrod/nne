@@ -13,8 +13,14 @@
         // return m.summation(map(inputs, weights, m.multiplication), func);
     }
 
-    function deltaForNeuron(deltas, weights) {
-        return m.summation(f.invoke(m.multiplication, f.transpose([weights, m.multiplication])));
+    function deltaForNeuron(deltaVector, weightsVector) {
+        var matrix = [deltaVector, weightsVector];
+        var matrixT = f.transpose(matrix);
+
+        var multiplyRows = f.curry(f.invoke, m.multiplication);
+        var set = f.map(matrixT, multiplyRows);
+
+        return m.summation(set);
         // return m.summation(map(inputs, weights, m.multiplication));
     }
 
