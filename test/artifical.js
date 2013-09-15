@@ -2,13 +2,13 @@ var a = require('../artificial.js');
 
 describe('Artificial', function(){
     describe('#activeteNeuron()', function(){
-        var inputVector = [1,2];
-        var weightVector = [3,3];
+        var inputsVector = [1,2];
+        var weightsVector = [3,3];
         var activationFunction = function(x) {
             return x;
         };
         it('should return neuron output', function(){
-            a.activeteNeuron(inputVector, weightVector, activationFunction).should.be.eql(9);
+            a.activeteNeuron(inputsVector, weightsVector, activationFunction).should.be.eql(9);
         })
     })
     describe('#deltaForNeuron()', function(){
@@ -21,6 +21,27 @@ describe('Artificial', function(){
             var deltasVector = [1,2];
             var weightsVector = [3,2];
             a.deltaForNeuron(deltasVector, weightsVector).should.be.eql(7);
+        })
+    })
+    describe('#newWeights()', function(){
+        it('should return delta error for given neuron with one connection', function(){
+            var inputsVector = [1];
+            var weightsVector = [3];
+            var deltas = 2;
+            var learningReate = 3;
+            var activationFunction = function(x) { return x; };
+            var derivative = function(x) { return x; }
+
+            a.newWeights(inputsVector, weightsVector, deltas, learningReate, derivative).should.be.eql([
+                3 + (2 * 3 * derivative(
+                                    a.activeteNeuron(
+                                        inputsVector,
+                                        weightsVector,
+                                        activationFunction
+                                    )
+                                )
+                    )
+            ]);
         })
     })
 });

@@ -24,27 +24,26 @@
         // return m.summation(map(inputs, weights, m.multiplication));
     }
 
-    function newWeights(inputs, weights, delta, derivative) {
-        var number = inputs.length;
-        var learningReate = 0.1;
+    function newWeights(inputsVector, weightsVector, delta, learningReate, derivative) {
+        var number = inputsVector.length;
 
-        var deltaVector = fill(delta, number);
-        var learningVector = fill(learningReate, number);
+        var deltaVector = f.fill(delta, number);
+        var learningVector = f.fill(learningReate, number);
 
-        var derivativeOfActivation = activeteNeuron(inputs, weights, derivative);
-        var derivativeVector = fill(derivativeOfActivation, number);
+        var derivativeOfActivation = activeteNeuron(inputsVector, weightsVector, derivative);
+        var derivativeVector = f.fill(derivativeOfActivation, number);
 
-        var matrix = [deltaVector, learningVector, derivativeVector, inputs];
+        var matrix = [deltaVector, learningVector, derivativeVector, inputsVector];
         var multiplicationMatrix = f.transpose(matrix);
 
-        var multiplicateInvoke = f.curry(f.invoke, m.multiplication)
-        var multiplicationVector = map(multiplicationMatrix, multiplicateInvoke);
+        var multiplyRows = f.curry(f.invoke, m.multiplication)
+        var gradientVector = f.map(multiplicationMatrix, multiplyRows);
         // var multiplicationResult = multiplicateEach.apply(null, multiplicationMatrix);
 
-        var additionInvoke = f.curry(f.invoke, m.addition);
+        var addRows = f.curry(f.invoke, m.addition);
         return f.map(
-            f.transpose([weights, multiplicationVector]),
-            additionInvoke
+            f.transpose([weightsVector, gradientVector]),
+            addRows
         );
         // var descent = map(fill(delta, number), inputs, map(weights, derivative), m.multiplication);
         // return map(weights, descent, m.addition);
