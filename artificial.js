@@ -10,7 +10,6 @@
 
         var set = f.map(matrixT, multiplyRows);
         return m.summation(set, func);
-        // return m.summation(map(inputs, weights, m.multiplication), func);
     }
 
     function deltaForNeuron(deltaVector, weightsVector) {
@@ -21,7 +20,6 @@
         var set = f.map(matrixT, multiplyRows);
 
         return m.summation(set);
-        // return m.summation(map(inputs, weights, m.multiplication));
     }
 
     function newWeights(inputsVector, weightsVector, delta, learningReate, derivative) {
@@ -38,15 +36,12 @@
 
         var multiplyRows = f.curry(f.invoke, m.multiplication)
         var gradientVector = f.map(multiplicationMatrix, multiplyRows);
-        // var multiplicationResult = multiplicateEach.apply(null, multiplicationMatrix);
 
         var addRows = f.curry(f.invoke, m.addition);
         return f.map(
             f.transpose([weightsVector, gradientVector]),
             addRows
         );
-        // var descent = map(fill(delta, number), inputs, map(weights, derivative), m.multiplication);
-        // return map(weights, descent, m.addition);
     }
 
     // inputData = [1, 2];
