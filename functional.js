@@ -132,7 +132,7 @@
 
     // (function(a, b, c, d)) -> a(b)(c)(d)
     function curry(func) {
-        var count = fargsc(func);
+        var count = func.length;
         var args = slice(arguments, 1);
         if (!count)  {
             return func;
@@ -173,11 +173,6 @@
         return result;
     }
 
-    function fargsc(func) {
-        var args = func.toString().match(/^function[^\(]*\(([^\)]*)\)/i)[1];
-        return args.length ? args.split(',').length : 0;
-    }
-
     /**
      * Return value function
      * Example: rv(1) -> 1
@@ -200,7 +195,6 @@
     exports.apply     = apply;
     exports.compose   = compose;
     exports.curry     = curry;
-    exports.fargsc    = fargsc;
     exports.fill      = fill;
     exports.filter    = filter;
     exports.forEach   = forEach;

@@ -50,14 +50,6 @@ describe('Functional', function(){
             f.slice([1],  0, -1).should.be.eql([]);
         })
     })
-    describe('#fargsc()', function(){
-        it('should return number of arguments in function when function is passed', function(){
-            f.fargsc(function(){}).should.be.eql(0);
-            f.fargsc(function(a){}).should.be.eql(1);
-            f.fargsc(function(b,c){}).should.be.eql(2);
-            f.fargsc(function(b,c,d){}).should.be.eql(3);
-        })
-    })
     describe('#forEach()', function(){
         it('should loop through array', function(){
             var looped = 0;
