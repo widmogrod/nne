@@ -1,23 +1,31 @@
 (function(exports){
+    var f = require('./functional.js');
+    var m = require('./mathematical.js');
 
-    function activeteNeuron(inputs, weigths, func) {
-        return m.summation(f.invoke(m.multiplication, f.transpose([weights, m.multiplication]), func)
+    function activeteNeuron(inputsVector, weightsVector, func) {
+        var matrix = [inputsVector, weightsVector];
+        var matrixT = f.transpose(matrix);
+
+        var multiplyRows = f.curry(f.invoke, m.multiplication);
+
+        var set = f.map(matrixT, multiplyRows);
+        return m.summation(set, func);
         // return m.summation(map(inputs, weights, m.multiplication), func);
     }
 
-    function deltaForNeuron(deltas, weigths) {
-        return m.summation(f.invoke(m.multiplication, f.transpose([weights, m.multiplication]));
+    function deltaForNeuron(deltas, weights) {
+        return m.summation(f.invoke(m.multiplication, f.transpose([weights, m.multiplication])));
         // return m.summation(map(inputs, weights, m.multiplication));
     }
 
-    function newWeights(inputs, weigths, delta, derivative) {
+    function newWeights(inputs, weights, delta, derivative) {
         var number = inputs.length;
         var learningReate = 0.1;
 
         var deltaVector = fill(delta, number);
         var learningVector = fill(learningReate, number);
 
-        var derivativeOfActivation = activeteNeuron(inputs, weigths, derivative);
+        var derivativeOfActivation = activeteNeuron(inputs, weights, derivative);
         var derivativeVector = fill(derivativeOfActivation, number);
 
         var matrix = [deltaVector, learningVector, derivativeVector, inputs];
@@ -29,26 +37,26 @@
 
         var additionInvoke = f.curry(f.invoke, m.addition);
         return f.map(
-            f.transpose([weights, multiplicationVector])
+            f.transpose([weights, multiplicationVector]),
             additionInvoke
         );
-        // var descent = map(fill(delta, number), inputs, map(weigths, derivative), m.multiplication);
-        // return map(weigths, descent, m.addition);
+        // var descent = map(fill(delta, number), inputs, map(weights, derivative), m.multiplication);
+        // return map(weights, descent, m.addition);
     }
 
     // inputData = [1, 2];
 
     // inputs = curry(activeteNeuron);
 
-    // weigths = inputs(inputData);
+    // weights = inputs(inputData);
     // outputs = map(nextLayer, function(neuron) {
-    //     activate = weigths(neuron.weights);
+    //     activate = weights(neuron.weights);
     //     return activate(neuron.activation);
     // })
 
-    // weigths = inputs(outputs);
+    // weights = inputs(outputs);
     // outputs = map(nextLayer, function(neuron) {
-    //     activate = weigths(neuron.weights);
+    //     activate = weights(neuron.weights);
     //     return activate(neuron.activation);
     // })
 
