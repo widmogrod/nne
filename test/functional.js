@@ -77,16 +77,23 @@ describe('Functional', function(){
             result.should.be.a('function');
         })
         it('should return function when function with one argument is passed', function(){
-            var result = f.curry(function(a){});
+            var result = f.curry(function(a){ return a + 1 });
             result.should.be.a('function');
+            result(1).should.be.eql(2);
         })
         it('should return function when function with two arguments is passed', function(){
-            var result = f.curry(function(a, b){});
+            var result = f.curry(function(a, b){ return a + b });
             result.should.be.a('function');
+            result(1,2).should.be.eql(3);
+            result(1)(2).should.be.eql(3);
         })
         it('should return function when function with tree arguments is passed', function(){
-            var result = f.curry(function(a, b, c){});
+            var result = f.curry(function(a, b, c){ return a + b + c });
             result.should.be.a('function');
+            result(1, 2, 3).should.be.eql(6);
+            result(1, 2)(3).should.be.eql(6);
+            result(1)(2, 3).should.be.eql(6);
+            result(1)(2)(3).should.be.eql(6);
         })
     })
     describe('#compose()', function(){
