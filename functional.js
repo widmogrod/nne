@@ -96,10 +96,10 @@
      * Apply arguments to function
      *
      * Examples:
-     * apply(addition, [1,2]) -> 3
-     * apply(addition, [1,2], [2,3]) -> [3, 5]
+     * invoke(addition, [1,2]) -> 3
+     * invoke(addition, [1,2], [2,3]) -> [3, 5]
      */
-    function apply(func, args, more) {
+    function invoke(func, args, more) {
         func = first(slice(arguments, 0, 1));
         args = slice(arguments, 1);
         var result = map(args, function(args) {
@@ -192,13 +192,13 @@
     }
 
     // in alphabetical order
-    exports.apply     = apply;
     exports.compose   = compose;
     exports.curry     = curry;
     exports.fill      = fill;
     exports.filter    = filter;
     exports.forEach   = forEach;
     exports.get       = get;
+    exports.invoke    = invoke;
     exports.is        = is;
     exports.map       = map;
     exports.maybe     = maybe;

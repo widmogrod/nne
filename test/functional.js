@@ -160,13 +160,13 @@ describe('Functional', function(){
             f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']], callback).should.be.eql([['a:a','x:x'],['b:b','y:y'],['c:c','z:z']]);
         })
     })
-    describe('#apply()', function(){
+    describe('#invoke()', function(){
         var func = function(a, b) { return a + b };
         it('should return result of a function', function(){
-            f.apply(func, [1,2]).should.be.eql(3);
+            f.invoke(func, [1,2]).should.be.eql(3);
         })
         it('should return array of results of a function if more that one argument is passed', function(){
-            f.apply(func, [1,2], [3,4]).should.be.eql([3, 7]);
+            f.invoke(func, [1,2], [3,4]).should.be.eql([3, 7]);
         })
     })
 });
