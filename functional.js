@@ -1,14 +1,23 @@
 (function(exports, undefined){
 
+    /**
+     * Check if object is given type
+     */
     function is(type, obj) {
         var clas = Object.prototype.toString.call(obj).slice(8, -1);
         return obj !== undefined && obj !== null && clas.toLowerCase() === type.toLowerCase();
     }
 
+    /**
+     * Slice arguments
+     */
     function slice(args, begin, end) {
         return Array.prototype.slice.call(args, begin, end);
     }
 
+    /**
+     * Apply function on each data element
+     */
     function forEach(data, func) {
         var i, length = data.length;
         for (i = 0; i < length; i++) {
@@ -16,6 +25,13 @@
         }
     }
 
+    /**
+     * Retrieve key on a object
+     *
+     * Example:
+     * get(1)(['a','b','c']) -> 'b'
+     * get('length')(['a','b','c']) -> 3
+     */
     function get(key) {
         return function (obj) {
             return obj[key];
@@ -34,6 +50,13 @@
      */
     function maybe(value, fn) {
         return value === null || value === undefined ? value : fn(value);
+    }
+
+    /**
+     * Check if value is array
+     */
+    function isArray(value) {
+        return is('array', value);
     }
 
     /**
@@ -62,10 +85,10 @@
      */
     function transpose(array, func) {
         var result = [],
-            func = func || rv;
+            func = func || returnValue;
 
         forEach(array, function(value, col) {
-            if (!is('array', value)) {
+            if (!isArray(value)) {
                 result[col] = [func(value)];
             } else {
                 forEach(value, function(item, idx){
@@ -85,7 +108,7 @@
      * fill(1, 2) -> [1, 1]
      */
     function fill(withValue, nTimes, array) {
-        array = is('array', array) ? array : [];
+        array = isArray(array) ? array : [];
         while(nTimes--) {
             array.push(withValue);
         }
@@ -130,7 +153,12 @@
         return more ? result : first(result);
     }
 
-    // (function(a, b, c, d)) -> a(b)(c)(d)
+    /**
+     * Curry function
+     *
+     * Example:
+     * curry(function(a, b, c, d)) -> a(b)(c)(d)
+     */
     function curry(func) {
         var count = func.length;
         var args = slice(arguments, 1);
@@ -146,6 +174,9 @@
         }
     }
 
+    /**
+     * Composer function argument via another functions
+     */
     function compose(base, first, more) {
         var functions = slice(arguments, 1);
         return function() {
@@ -156,13 +187,19 @@
         }
     }
 
-    function reduce(data, func, result) {
+    /**
+     * Reduce array to base using function
+     */
+    function reduce(data, func, base) {
         forEach(data, function(item) {
-            result = func(item, result);
+            base = func(item, base);
         });
-        return result;
+        return base;
     }
 
+    /**
+     * Return new array containing values validated by function
+     */
     function filter(data, func) {
         var result = [];
         forEach(data, function(item, i) {
@@ -175,9 +212,9 @@
 
     /**
      * Return value function
-     * Example: rv(1) -> 1
+     * Example: returnValue(1) -> 1
      */
-    function rv(item) {
+    function returnValue(item) {
         return item;
     }
 
@@ -185,27 +222,28 @@
      * Return monadic value
      * Example: mv(1) -> f() -> 1
      */
-    function mv(value) {
+    function mValue(value) {
         return function() {
             return value;
         }
     }
 
     // in alphabetical order
-    exports.compose   = compose;
-    exports.curry     = curry;
-    exports.fill      = fill;
-    exports.filter    = filter;
-    exports.forEach   = forEach;
-    exports.get       = get;
-    exports.invoke    = invoke;
-    exports.is        = is;
-    exports.map       = map;
-    exports.maybe     = maybe;
-    exports.mv        = mv;
-    exports.reduce    = reduce;
-    exports.transpose = transpose;
-    exports.rv        = rv;
-    exports.slice     = slice;
+    exports.compose     = compose;
+    exports.curry       = curry;
+    exports.fill        = fill;
+    exports.filter      = filter;
+    exports.forEach     = forEach;
+    exports.get         = get;
+    exports.invoke      = invoke;
+    exports.is          = is;
+    exports.isArray     = isArray;
+    exports.map         = map;
+    exports.maybe       = maybe;
+    exports.mValue      = mValue;
+    exports.reduce      = reduce;
+    exports.transpose   = transpose;
+    exports.returnValue = returnValue;
+    exports.slice       = slice;
 
 })(exports || this);
