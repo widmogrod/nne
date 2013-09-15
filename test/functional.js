@@ -105,6 +105,12 @@ describe('Functional', function(){
             addTwo(3).should.be.eql(6);
             addTwo(4).should.be.eql(7);
         })
+        it('should return array when function with one argument is passed', function(){
+            var result = f.curry(function(a){ return a });
+            result.should.be.a('function');
+            result([1]).should.be.eql([1]);
+            result([1,2]).should.be.eql([1,2]);
+        })
     })
     describe('#compose()', function(){
         it('should return function with wrapped function', function(){
