@@ -122,13 +122,13 @@
      * invoke(addition, [1,2]) -> 3
      * invoke(addition, [1,2], [2,3]) -> [3, 5]
      */
-    function invoke(func, args, more) {
+    function invoke(func, args) {
         func = first(slice(arguments, 0, 1));
         args = slice(arguments, 1);
         var result = map(args, function(args) {
             return func.apply(null, args);
         });
-        return more ? result : first(result);
+        return args.length > 1 ? result : first(result);
     }
 
     /**
@@ -140,7 +140,7 @@
      *
      * @return []
      */
-    function map(data, func, more) {
+    function map(data, func) {
         data = slice(arguments, 0, -1);
         func = first(slice(arguments, -1));
         var result = [];
@@ -150,7 +150,7 @@
                 result[idx][col] = func(value);
             })
         });
-        return more ? result : first(result);
+        return data.length > 1 ? result : first(result);
     }
 
     /**
@@ -166,18 +166,22 @@
             return func;
         }
         if (args.length < count) {
-            return function() {
-                return curry.apply(null, [func].concat(args, slice(arguments)));
+            return function carried() {
+                var newArgs = [func];
+                newArgs.push.apply(newArgs, args);
+                newArgs.push.apply(newArgs, slice(arguments));
+                return curry.apply(null, newArgs);
             }
         } else {
-            return func.apply(null, args.concat(slice(arguments)));
+            return func.apply(null, args);
         }
     }
 
     /**
      * Composer function argument via another functions
      */
-    function compose(base, first, more) {
+    function compose(base, first) {
+        var more = arguments.length > 2;
         var functions = slice(arguments, 1);
         return function() {
             var args = slice(arguments);

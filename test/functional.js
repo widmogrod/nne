@@ -95,6 +95,16 @@ describe('Functional', function(){
             result(1)(2, 3).should.be.eql(6);
             result(1)(2)(3).should.be.eql(6);
         })
+        it('should hold context of previous arguments', function(){
+            var result = f.curry(function(a, b, c){ return a + b + c });
+            result.should.be.a('function');
+
+            var addOne = result(1);
+            var addTwo = addOne(2);
+
+            addTwo(3).should.be.eql(6);
+            addTwo(4).should.be.eql(7);
+        })
     })
     describe('#compose()', function(){
         it('should return function with wrapped function', function(){
@@ -168,12 +178,16 @@ describe('Functional', function(){
         })
     })
     describe('#invoke()', function(){
-        var func = function(a, b) { return a + b };
+        var func = function sum(a, b) { return a + b };
         it('should return result of a function', function(){
             f.invoke(func, [1,2]).should.be.eql(3);
         })
         it('should return array of results of a function if more that one argument is passed', function(){
             f.invoke(func, [1,2], [3,4]).should.be.eql([3, 7]);
+        })
+        it('should allow inception and return arguments', function(){
+            f.invoke(f.invoke, [func, [1,2]]).should.be.eql(3);
+            f.invoke(f.invoke, [func, [1,2], [3,4]]).should.be.eql([3, 7]);
         })
     })
 });
