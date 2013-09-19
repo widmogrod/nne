@@ -1,4 +1,5 @@
 (function(exports, undefined){
+    "use strict";
 
     /**
      * Check if object is given type
@@ -57,6 +58,13 @@
      */
     function isArray(value) {
         return is('array', value);
+    }
+
+    /**
+     * Check if value is object
+     */
+    function isObject(value) {
+        return is('object', value);
     }
 
     /**
@@ -242,6 +250,7 @@
     exports.invoke      = invoke;
     exports.is          = is;
     exports.isArray     = isArray;
+    exports.isObject    = isObject;
     exports.map         = map;
     exports.maybe       = maybe;
     exports.mValue      = mValue;
