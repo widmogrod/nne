@@ -7,14 +7,14 @@
 
     function activeteNeuron(inputsVector, weightsVector, func) {
         return m.summation(
-            f.applyColumns(m.multiplication, inputsVector, weightsVector),
+            f.applyc(m.multiplication, inputsVector, weightsVector),
             func
         );
     }
 
     function deltaForNeuron(deltaVector, weightsVector) {
         return m.summation(
-            f.applyColumns(m.multiplication, deltaVector, weightsVector)
+            f.applyc(m.multiplication, deltaVector, weightsVector)
         );
     }
 
@@ -27,9 +27,9 @@
         var derivativeOfActivation = activeteNeuron(inputsVector, weightsVector, derivative);
         var derivativeVector = f.fill(derivativeOfActivation, number);
 
-        var gradientVector = f.applyColumns(m.multiplication, deltaVector, learningVector, derivativeVector, inputsVector);
+        var gradientVector = f.applyc(m.multiplication, deltaVector, learningVector, derivativeVector, inputsVector);
 
-        return f.applyColumns(m.addition, weightsVector, gradientVector);
+        return f.applyc(m.addition, weightsVector, gradientVector);
     }
 
     function topographyMap(topography, data) {

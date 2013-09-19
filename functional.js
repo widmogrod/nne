@@ -153,13 +153,13 @@
      * arguments passed to function are each element from
      *
      * Example:
-     * applyColumns(multiply, [2,3], [4,5]) -> [8, 15]
+     * applyc(multiply, [2,3], [4,5]) -> [8, 15]
      *
      * @param  Function func
      * @param  Array args
      * @return Array
      */
-    function applyColumns(func, args) {
+    function applyc(func, args) {
         func = first(slice(arguments, 0, 1));
         args = slice(arguments, 1);
         return map(
@@ -287,7 +287,7 @@
 
     // in alphabetical order
     exports.apply       = apply;
-    exports.applyColumns= applyColumns;
+    exports.applyc      = applyc;
     exports.compose     = compose;
     exports.curry       = curry;
     exports.fill        = fill;

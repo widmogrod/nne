@@ -208,14 +208,14 @@ describe('Functional', function(){
             f.invoke(data, 'sort').should.be.eql([[2,3,5],[2,4,4],[1,2,3]]);
         })
     })
-    describe('#applyColumns()', function(){
+    describe('#applyc()', function(){
         it('should invoke and return array', function(){
             var func = function(a, b) { return a * b }
-            f.applyColumns(func, [2], [2]).should.be.eql([4]);
+            f.applyc(func, [2], [2]).should.be.eql([4]);
         })
         it('should invoke and return array', function(){
             var func = function(a, b) { return a * b }
-            f.applyColumns(func, [2,3], [4,5]).should.be.eql([8, 15]);
+            f.applyc(func, [2,3], [4,5]).should.be.eql([8, 15]);
         })
     })
 });
