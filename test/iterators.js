@@ -1,4 +1,4 @@
-var i = require('../iterator.js');
+var i = require('../iterators.js');
 
 describe('Iterators', function(){
     describe('Iterator', function(){
