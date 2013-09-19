@@ -6,23 +6,16 @@
     var i = require('./iterators.js');
 
     function activeteNeuron(inputsVector, weightsVector, func) {
-        var matrix = [inputsVector, weightsVector];
-        var matrixT = f.transpose(matrix);
-
-        var multiplyRows = f.curry(f.apply, m.multiplication);
-
-        var set = f.map(matrixT, multiplyRows);
-        return m.summation(set, func);
+        return m.summation(
+            f.applyColumns(m.multiplication, inputsVector, weightsVector),
+            func
+        );
     }
 
     function deltaForNeuron(deltaVector, weightsVector) {
-        var matrix = [deltaVector, weightsVector];
-        var matrixT = f.transpose(matrix);
-
-        var multiplyRows = f.curry(f.apply, m.multiplication);
-        var set = f.map(matrixT, multiplyRows);
-
-        return m.summation(set);
+        return m.summation(
+            f.applyColumns(m.multiplication, deltaVector, weightsVector)
+        );
     }
 
     function newWeights(inputsVector, weightsVector, delta, learningReate, derivative) {
@@ -34,17 +27,9 @@
         var derivativeOfActivation = activeteNeuron(inputsVector, weightsVector, derivative);
         var derivativeVector = f.fill(derivativeOfActivation, number);
 
-        var matrix = [deltaVector, learningVector, derivativeVector, inputsVector];
-        var multiplicationMatrix = f.transpose(matrix);
+        var gradientVector = f.applyColumns(m.multiplication, deltaVector, learningVector, derivativeVector, inputsVector);
 
-        var multiplyRows = f.curry(f.apply, m.multiplication)
-        var gradientVector = f.map(multiplicationMatrix, multiplyRows);
-
-        var addRows = f.curry(f.apply, m.addition);
-        return f.map(
-            f.transpose([weightsVector, gradientVector]),
-            addRows
-        );
+        return f.applyColumns(m.addition, weightsVector, gradientVector);
     }
 
     function topographyMap(topography, data) {
