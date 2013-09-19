@@ -180,7 +180,7 @@
         method = slice(arguments, 1, 2);
         args = slice(arguments, 2);
         return map(list, function(item) {
-            return args ? item[method].apply(item, args) : item[method]();
+            return args.length > 0 ? item[method].apply(item, args) : item[method]();
         });
     }
 
