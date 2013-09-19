@@ -268,6 +268,26 @@
     }
 
     /**
+     * Memorize function call with arguments
+     * @param  Function func
+     * @return Function
+     */
+    function memoize(func) {
+        var cache = {};
+        return function memorized() {
+            var cacheKey = (arguments.length > 0)
+                ? slice(arguments).join('::')
+                : 'without_args';
+
+            if (typeof cache[cacheKey] !== 'undefined') {
+                return cache[cacheKey];
+            }
+
+            return cache[cacheKey] = func.apply(func, arguments);
+        }
+    }
+
+    /**
      * Return value function
      * Example: returnValue(1) -> 1
      */
@@ -300,6 +320,7 @@
     exports.isObject    = isObject;
     exports.map         = map;
     exports.maybe       = maybe;
+    exports.memoize     = memoize;
     exports.mValue      = mValue;
     exports.reduce      = reduce;
     exports.transpose   = transpose;

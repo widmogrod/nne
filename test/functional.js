@@ -218,4 +218,26 @@ describe('Functional', function(){
             f.applyc(func, [2,3], [4,5]).should.be.eql([8, 15]);
         })
     })
+    describe('#memoize()', function(){
+        it('should invoke cached function end return value', function(){
+            var test = 0;
+            var func = f.memoize(function() {
+                test += 1;
+                return test;
+            });
+            func.should.be.a('function');
+            func().should.be.eql(1);
+            func().should.be.eql(1);
+        })
+        it('should invoke cached function end return value if more complex arguments are passed', function(){
+            var test = 0;
+            var func = f.memoize(function(a,b,c) {
+                test += 1;
+                return test;
+            });
+            func.should.be.a('function');
+            func(null, [1,2,[3]], {test: function(){}}).should.be.eql(1);
+            func(null, [1,2,[3]], {test: function(){}}).should.be.eql(1);
+        })
+    })
 });
