@@ -183,17 +183,23 @@ describe('Functional', function(){
             f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']], callback).should.be.eql([['a:a','x:x'],['b:b','y:y'],['c:c','z:z']]);
         })
     })
-    describe('#invoke()', function(){
+    describe('#apply()', function(){
         var func = function sum(a, b) { return a + b };
         it('should return result of a function', function(){
-            f.invoke(func, [1,2]).should.be.eql(3);
+            f.apply(func, [1,2]).should.be.eql(3);
         })
         it('should return array of results of a function if more that one argument is passed', function(){
-            f.invoke(func, [1,2], [3,4]).should.be.eql([3, 7]);
+            f.apply(func, [1,2], [3,4]).should.be.eql([3, 7]);
         })
         it('should allow inception and return arguments', function(){
-            f.invoke(f.invoke, [func, [1,2]]).should.be.eql(3);
-            f.invoke(f.invoke, [func, [1,2], [3,4]]).should.be.eql([3, 7]);
+            f.apply(f.apply, [func, [1,2]]).should.be.eql(3);
+            f.apply(f.apply, [func, [1,2], [3,4]]).should.be.eql([3, 7]);
+        })
+    })
+    describe('#invoke()', function(){
+        var data = [[5,3,2], [4,4,2], [1,2,3]];
+        it('should invoke method on each element of the list', function(){
+            f.invoke(data, 'sort').should.be.eql([[2,3,5],[2,4,4],[1,2,3]]);
         })
     })
 });

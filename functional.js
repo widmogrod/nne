@@ -130,13 +130,34 @@
      * invoke(addition, [1,2]) -> 3
      * invoke(addition, [1,2], [2,3]) -> [3, 5]
      */
-    function invoke(func, args) {
+    function apply(func, args) {
         func = first(slice(arguments, 0, 1));
         args = slice(arguments, 1);
         var result = map(args, function(args) {
-            return func.apply(null, args);
+            switch(args && args.length) {
+                case 0:  return func();
+                case 1:  return func(args[0]);
+                case 2:  return func(args[0], args[1]);
+                default: return func.apply(null, args);
+            }
         });
         return args.length > 1 ? result : first(result);
+    }
+
+    /**
+     * Apply arguments to function
+     *
+     * Examples:
+     * invoke(addition, [1,2]) -> 3
+     * invoke(addition, [1,2], [2,3]) -> [3, 5]
+     */
+    function invoke(list, method, args) {
+        list = first(slice(arguments, 0, 1));
+        method = slice(arguments, 1, 2);
+        args = slice(arguments, 3);
+        return map(list, function(item) {
+            return args ? item[method].apply(item, args) : item[method]();
+        });
     }
 
     /**
@@ -241,6 +262,7 @@
     }
 
     // in alphabetical order
+    exports.apply       = apply;
     exports.compose     = compose;
     exports.curry       = curry;
     exports.fill        = fill;

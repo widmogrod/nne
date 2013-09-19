@@ -1,4 +1,6 @@
 (function(exports){
+    "use strict";
+
     var f = require('./functional.js');
 
     // in alphabetical order

@@ -1,12 +1,15 @@
 (function(exports){
+    "use strict";
+
     var f = require('./functional.js');
     var m = require('./mathematical.js');
+    var i = require('./iterators.js');
 
     function activeteNeuron(inputsVector, weightsVector, func) {
         var matrix = [inputsVector, weightsVector];
         var matrixT = f.transpose(matrix);
 
-        var multiplyRows = f.curry(f.invoke, m.multiplication);
+        var multiplyRows = f.curry(f.apply, m.multiplication);
 
         var set = f.map(matrixT, multiplyRows);
         return m.summation(set, func);
@@ -16,7 +19,7 @@
         var matrix = [deltaVector, weightsVector];
         var matrixT = f.transpose(matrix);
 
-        var multiplyRows = f.curry(f.invoke, m.multiplication);
+        var multiplyRows = f.curry(f.apply, m.multiplication);
         var set = f.map(matrixT, multiplyRows);
 
         return m.summation(set);
@@ -34,15 +37,90 @@
         var matrix = [deltaVector, learningVector, derivativeVector, inputsVector];
         var multiplicationMatrix = f.transpose(matrix);
 
-        var multiplyRows = f.curry(f.invoke, m.multiplication)
+        var multiplyRows = f.curry(f.apply, m.multiplication)
         var gradientVector = f.map(multiplicationMatrix, multiplyRows);
 
-        var addRows = f.curry(f.invoke, m.addition);
+        var addRows = f.curry(f.apply, m.addition);
         return f.map(
             f.transpose([weightsVector, gradientVector]),
             addRows
         );
     }
+
+    function topographyMap(topography, data) {
+        var it, current, prev;
+
+        it = i.RecursiveIterator(
+            new i.Iterator(topography),
+            function(item) {
+                if (!f.isObject(item)) {
+                    return;
+                }
+                return new i.Iterator(item['connections']);
+            }
+        );
+
+        while(it.valid()) {
+            current = it.current();
+            if (it.depth === 0) {
+                current.data = data[current['name']];
+            }
+            // how to get deepest?
+            else if (it.depth < prev) {
+
+            }
+
+            prev = Math.max(it.depth, prev);
+
+            it.next();
+        }
+    }
+
+    // function train(data, topography) {
+    //     var layer = 0;
+    //     var inputsNamespaces = [];
+    //     var inputs = [];
+    //     var outputs = [];
+
+    //     var queue = {};
+
+    //     iterate(topology, function(it, next, meta) {
+    //         if (meta.deep == 0) {
+    //             // we have input
+    //             inputsNamespaces.push(it.name);
+    //             // we assume we have name
+    //             inputs.push(data[it.name]);
+
+    //             queue.add(it.name, activateNeuron)
+    //         } else {
+    //             queue.after(
+    //                 meta.parent.it.name,
+    //                 it.name,
+    //                 activateNeuron
+    //             )
+    //         }
+
+    //         next();
+    //     });
+
+    //     queue.execute = function() {
+    //         var inputs = [[1,2,3], [1,2,3]];
+    //         while(var calls = pararel.nextBatch(inputs)) {
+    //             var p = runParallel(calls)
+    //             while(!p.isBinish());
+    //             var inputs = p.results();
+    //         }
+    //     }
+
+    //     queue.add = function(name, func) {
+
+    //     }
+
+
+    // }
+
+
+
 
     // inputData = [1, 2];
 
