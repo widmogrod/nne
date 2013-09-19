@@ -171,6 +171,12 @@ describe('Functional', function(){
         })
     })
     describe('#transpose()', function(){
+        it('should return array if not type of array is passed', function(){
+            f.transpose(2).should.be.eql([2]);
+        })
+        it('should return array single array is passed', function(){
+            f.transpose([2]).should.be.eql([[2]]);
+        })
         it('should return transposed array if array is passed', function(){
             f.transpose(['a', 'b', 'c']).should.be.eql([['a'],['b'],['c']]);
             f.transpose([['a', 'b', 'c'], ['x', 'y', 'z']]).should.be.eql([['a','x'],['b','y'],['c','z']]);
@@ -200,6 +206,16 @@ describe('Functional', function(){
         var data = [[5,3,2], [4,4,2], [1,2,3]];
         it('should invoke method on each element of the list', function(){
             f.invoke(data, 'sort').should.be.eql([[2,3,5],[2,4,4],[1,2,3]]);
+        })
+    })
+    describe('#applyColumns()', function(){
+        it('should invoke and return array', function(){
+            var func = function(a, b) { return a * b }
+            f.applyColumns(func, [2], [2]).should.be.eql([4]);
+        })
+        it('should invoke and return array', function(){
+            var func = function(a, b) { return a * b }
+            f.applyColumns(func, [2,3], [4,5]).should.be.eql([8, 15]);
         })
     })
 });

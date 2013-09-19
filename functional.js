@@ -92,18 +92,22 @@
      * ]
      */
     function transpose(array, func) {
-        var result = [],
-            func = func || returnValue;
+        func = func || returnValue;
 
+        if (!isArray(array)) {
+            return [func(array)];
+        }
+
+        var result = [];
         forEach(array, function(value, col) {
-            if (!isArray(value)) {
-                result[col] = [func(value)];
-            } else {
+            if (isArray(value)) {
                 forEach(value, function(item, idx){
                     item = func(item);
                     result[idx] = result[idx] ? result[idx] : [];
                     result[idx][col] = item;
                 });
+            } else {
+                result[col] = [func(value)];
             }
         });
         return result;
@@ -145,6 +149,26 @@
     }
 
     /**
+     * Apply on list of arguments function but
+     * arguments passed to function are each element from
+     *
+     * Example:
+     * applyColumns(multiply, [2,3], [4,5]) -> [8, 15]
+     *
+     * @param  Function func
+     * @param  Array args
+     * @return Array
+     */
+    function applyColumns(func, args) {
+        func = first(slice(arguments, 0, 1));
+        args = slice(arguments, 1);
+        return map(
+            transpose(args),
+            curry(apply, func)
+        );
+    }
+
+    /**
      * Apply arguments to function
      *
      * Examples:
@@ -154,7 +178,7 @@
     function invoke(list, method, args) {
         list = first(slice(arguments, 0, 1));
         method = slice(arguments, 1, 2);
-        args = slice(arguments, 3);
+        args = slice(arguments, 2);
         return map(list, function(item) {
             return args ? item[method].apply(item, args) : item[method]();
         });
@@ -263,6 +287,7 @@
 
     // in alphabetical order
     exports.apply       = apply;
+    exports.applyColumns= applyColumns;
     exports.compose     = compose;
     exports.curry       = curry;
     exports.fill        = fill;
