@@ -2,11 +2,35 @@ var i = require('../iterators.js');
 
 describe('Iterators', function(){
     describe('Iterator', function(){
-        var data = ['a', 'b', 'c'];
-        var object = new i.Iterator(data);
+        var data, object;
+
+        beforeEach(function() {
+            data = ['a', 'b', 'c'];
+            object = new i.Iterator(data);
+        })
 
         it('should be a object', function(){
             object.should.be.a('object');
+        })
+        it('should rewind to beginning', function(){
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0]);
+
+            object.next();
+
+            object.key().should.be.eql(1);
+            object.current().should.be.eql(data[1]);
+
+            while(object.valid()) {
+                object.next();
+            }
+
+            object.valid().should.be.false;
+            object.rewind();
+            object.valid().should.be.true;
+
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0]);
         })
         it('should have valid iteration flow', function(){
             object.valid().should.be.true;
@@ -31,8 +55,12 @@ describe('Iterators', function(){
         })
     })
     describe('IteratorIterator', function(){
-        var data = ['a', 'b', 'c'];
-        var object = new i.IteratorIterator(new i.Iterator(data));
+        var data, object;
+
+        beforeEach(function() {
+            data = ['a', 'b', 'c'];
+            object = new i.IteratorIterator(new i.Iterator(data))
+        })
 
         it('should be a object', function(){
             object.should.be.a('object');
@@ -44,6 +72,26 @@ describe('Iterators', function(){
             } catch(e) {
                 e.should.be.a('object');
             }
+        })
+        it('should rewind to beginning', function(){
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0]);
+
+            object.next();
+
+            object.key().should.be.eql(1);
+            object.current().should.be.eql(data[1]);
+
+            while(object.valid()) {
+                object.next();
+            }
+
+            object.valid().should.be.false;
+            object.rewind();
+            object.valid().should.be.true;
+
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0]);
         })
         it('should have valid iteration flow', function(){
             object.valid().should.be.true;
@@ -68,13 +116,17 @@ describe('Iterators', function(){
         })
     })
     describe('RecursiveIterator', function(){
-        var data = [['a','aa', 'aaa'], ['b','bb','bbb'], ['c','cc','ccc']];
-        var func = function(value) {
-            if (Array.isArray(value)) {
-                return new i.Iterator(value);
+        var data, func, object;
+
+        beforeEach(function() {
+            data = [['a','aa', 'aaa'], ['b','bb','bbb'], ['c','cc','ccc']]
+            func = function(value) {
+                if (Array.isArray(value)) {
+                    return new i.Iterator(value);
+                }
             }
-        }
-        var object = new i.RecursiveIterator(new i.Iterator(data), func);
+            object = new i.RecursiveIterator(new i.Iterator(data), func)
+        })
 
         it('should be a object', function(){
             object.should.be.a('object');
@@ -94,6 +146,26 @@ describe('Iterators', function(){
             } catch(e) {
                 e.should.be.a('object');
             }
+        })
+        it('should rewind to beginning', function(){
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0][0]);
+
+            object.next();
+
+            object.key().should.be.eql(1);
+            object.current().should.be.eql(data[0][1]);
+
+            while(object.valid()) {
+                object.next();
+            }
+
+            object.valid().should.be.false;
+            object.rewind();
+            object.valid().should.be.true;
+
+            object.key().should.be.eql(0);
+            object.current().should.be.eql(data[0][0]);
         })
         it('should have valid iteration flow', function(){
             object.valid().should.be.true;
@@ -156,19 +228,13 @@ describe('Iterators', function(){
         })
 
         it('should iterate to the end', function(){
-            var countDepths = {};
-            var currentDepthInData;
-
+            var count = 0;
             object.rewind();
             while(object.valid()) {
-                countDepths[object.depth] = countDepths[object.depth]
-                    ? (countDepths[object.depth]) + 1 : 0;
-
-                currentDepthInData = countDepths[object.depth];
-                object.current().should.be.eql(data[currentDepthInData][object.key()])
-
+                ++count;
                 object.next();
             }
+            count.should.be.eql(9);
         })
     })
 });

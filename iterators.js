@@ -81,11 +81,12 @@
         this.its = [it];
         this.func = func;
         this.depth = 0;
-
     }
     RecursiveIterator.constructor = IteratorIterator;
     RecursiveIterator.prototype = new IteratorMock();
     RecursiveIterator.prototype.key = function() {
+        // Since, current calculate nested records then we need to invoke it first
+        this.current();
         return this.its[this.depth].key();
     }
     RecursiveIterator.prototype.valid = function() {
@@ -96,7 +97,7 @@
         do {
             current = this.its[this.depth].current();
             nested = this.func(current);
-            isNested = nested instanceof IteratorMock;
+            isNested = (nested instanceof IteratorMock);
             if (isNested) {
                 this.its[++this.depth] = nested;
             }
@@ -105,10 +106,14 @@
         return current;
     }
     RecursiveIterator.prototype.rewind = function() {
-        this.its = [this.its[0]];
         this.depth = 0;
+        this.its = [this.its[this.depth]];
+        this.its[this.depth].rewind();
     }
     RecursiveIterator.prototype.next = function() {
+        // Since, current calculate nested records then we need to invoke it first
+        this.current();
+
         do
         {
             this.its[this.depth].next();
