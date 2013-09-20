@@ -82,28 +82,25 @@
         this.func = func;
         this.depth = 0;
     }
-    RecursiveIterator.constructor = IteratorIterator;
+    RecursiveIterator.constructor = RecursiveIterator;
     RecursiveIterator.prototype = new IteratorMock();
     RecursiveIterator.prototype.key = function() {
-        // Since, current calculate nested records then we need to invoke it first
+        // Because, current calculate children nodes
         this.current();
         return this.its[this.depth].key();
     }
     RecursiveIterator.prototype.valid = function() {
+        // Because, current calculate children nodes
+        this.current();
         return this.its[this.depth].valid();
     }
     RecursiveIterator.prototype.current = function() {
-        var current, nested, isNested;
-        do {
-            current = this.its[this.depth].current();
-            nested = this.func(current);
-            isNested = (nested instanceof IteratorMock);
-            if (isNested) {
-                this.its[++this.depth] = nested;
-            }
-        } while(isNested);
-
-        return current;
+        var childs;
+        while (this.hasChildrens()) {
+            childs = this.getChildrens();
+            this.its[++this.depth] = childs;
+        }
+        return this.its[this.depth].current();
     }
     RecursiveIterator.prototype.rewind = function() {
         this.depth = 0;
@@ -111,16 +108,20 @@
         this.its[this.depth].rewind();
     }
     RecursiveIterator.prototype.next = function() {
-        // Since, current calculate nested records then we need to invoke it first
+        // Because, current calculate children nodes
         this.current();
-
         do
         {
             this.its[this.depth].next();
-            this.current();
-        } while(!this.its[this.depth].valid() && --this.depth >= 0);
+        } while(!this.its[this.depth].valid() && this.depth-- > 0);
 
         this.depth = this.depth < 0 ? 0 : this.depth
+    }
+    RecursiveIterator.prototype.getChildrens = function() {
+        return this.func(this.its[this.depth].current());
+    }
+    RecursiveIterator.prototype.hasChildrens = function() {
+        return this.getChildrens() instanceof IteratorMock;
     }
 
     exports.IteratorMock        = IteratorMock;

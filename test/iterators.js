@@ -236,5 +236,12 @@ describe('Iterators', function(){
             }
             count.should.be.eql(9);
         })
+        it('should return valid current value after calling only next()', function(){
+            object.next(); object.next(); object.next();
+            object.next(); object.next(); object.next();
+            object.next(); object.next();
+
+            object.current().should.be.eql('ccc');
+        })
     })
 });
