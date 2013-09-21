@@ -32,148 +32,31 @@
         return f.applyc(m.addition, weightsVector, gradientVector);
     }
 
-    function topographyMap(topography, data) {
-        var it, current, prev;
+    /**
+     * Create full topography graph
+     */
+    function topography(topography) {
 
-        it = i.RecursiveIterator(
-            new i.Iterator(topography),
-            function(item) {
-                if (!f.isObject(item)) {
-                    return;
-                }
-                return new i.Iterator(item['connections']);
-            }
-        );
-
-        while(it.valid()) {
-            current = it.current();
-            if (it.depth === 0) {
-                current.data = data[current['name']];
-            }
-            // how to get deepest?
-            else if (it.depth < prev) {
-
-            }
-
-            prev = Math.max(it.depth, prev);
-
-            it.next();
-        }
     }
 
-    // function train(data, topography) {
-    //     var layer = 0;
-    //     var inputsNamespaces = [];
-    //     var inputs = [];
-    //     var outputs = [];
+    /**
+     * Merge topography with input - output data
+     */
+    function topographyMap(topography, data) {
+        var it, current, prev;
+    }
 
-    //     var queue = {};
+    function topographyInitWeigths(topography) {
 
-    //     iterate(topology, function(it, next, meta) {
-    //         if (meta.deep == 0) {
-    //             // we have input
-    //             inputsNamespaces.push(it.name);
-    //             // we assume we have name
-    //             inputs.push(data[it.name]);
+    }
 
-    //             queue.add(it.name, activateNeuron)
-    //         } else {
-    //             queue.after(
-    //                 meta.parent.it.name,
-    //                 it.name,
-    //                 activateNeuron
-    //             )
-    //         }
+    function train(topography) {
 
-    //         next();
-    //     });
-
-    //     queue.execute = function() {
-    //         var inputs = [[1,2,3], [1,2,3]];
-    //         while(var calls = pararel.nextBatch(inputs)) {
-    //             var p = runParallel(calls)
-    //             while(!p.isBinish());
-    //             var inputs = p.results();
-    //         }
-    //     }
-
-    //     queue.add = function(name, func) {
-
-    //     }
-
-
-    // }
-
-
-
-
-    // inputData = [1, 2];
-
-    // inputs = curry(activeteNeuron);
-
-    // weights = inputs(inputData);
-    // outputs = map(nextLayer, function(neuron) {
-    //     activate = weights(neuron.weights);
-    //     return activate(neuron.activation);
-    // })
-
-    // weights = inputs(outputs);
-    // outputs = map(nextLayer, function(neuron) {
-    //     activate = weights(neuron.weights);
-    //     return activate(neuron.activation);
-    // })
-
-    // var topography = [
-    //     {
-    //         name: 'xor_input',
-    //         number: 2,
-    //         connections: [
-    //             {
-    //                 name: 'code',
-    //                 number: 3,
-    //                 connections: [
-    //                     {
-    //                         name: 'output',
-    //                         number: 1
-    //                     }
-    //                 ]
-    //             }
-    //         ]
-    //     }
-    // ];
-
-    // var options = {
-    //     momentum : 0.4,
-    //     learningRate : 0.2,
-    //     bias : -1
-    // };
-
-    // var data = [
-    //     {
-    //         xor_input : [0, 0],
-    //         output: [1]
-    //     }, {
-    //         xor_input : [1, 0],
-    //         output: [0]
-    //     }, {
-    //         xor_input : [0, 1],
-    //         output: [0]
-    //     }, {
-    //         xor_input : [1, 1],
-    //         output: [1]
-    //     }
-    // ];
-
-    // var net = build(topography, options);
-    // do {
-    //     // train
-    //     var result = net.train(data);
-    // } while(result.errorRate < 0.05);
-
-    // trained
+    }
 
     exports.activeteNeuron = activeteNeuron;
     exports.deltaForNeuron = deltaForNeuron;
-    exports.newWeights = newWeights;
+    exports.newWeights     = newWeights;
+    exports.topographyMap  = topographyMap;
 
 })(exports || this);

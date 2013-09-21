@@ -44,4 +44,63 @@ describe('Artificial', function(){
             ]);
         })
     })
+    describe('#topographyMap()', function(){
+        var topography, data;
+        beforeEach(function() {
+            topography = [
+                {
+                    name: 'persons',
+                    neurons: 24,
+                    type: 'input',
+                    // data: [0,0,0,0,0,1,0,0,0,0,0,0,0],
+                    // weights: [],
+                    connections: [
+                        {
+                            name: 'distributed_person',
+                            neurons: 6,
+                            type: 'hidden',
+                            connections: [
+                                {
+                                    name: 'merging',
+                                    neurons: 6,
+                                    type: 'hidden',
+                                    data: [
+                                        {'@ref': 'distriuted_relation'}
+                                    ],
+                                    connections: [
+                                        {
+                                            name: 'output',
+                                            neurons: 24,
+                                            type: 'output',
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'relation',
+                    neurons: 12,
+                    type: 'input',
+                    connections: [
+                        {
+                            name: 'distriuted_relation',
+                            neurons: 4,
+                            type: 'hidden',
+                        }
+                    ]
+                }
+            ];
+
+            data = {
+                persons: [0,0,0,0,0,1,0,0,0,0,0,0,0],
+                relation: [0,0,0,1,0],
+                output: [0,1]
+            };
+        })
+        it('should return delta error for given neuron with one connection', function(){
+            a.topographyMap(topography, data)
+        })
+    })
 });
