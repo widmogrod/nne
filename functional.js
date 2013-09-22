@@ -10,20 +10,41 @@
     }
 
     /**
+     * Check if value is function
+     */
+    function isFunction(value) {
+        return is('function', value);
+    }
+
+    /**
+     * Check if value is array
+     */
+    function isArray(value) {
+        return is('array', value);
+    }
+
+    /**
+     * Check if value is object
+     */
+    function isObject(value) {
+        return is('object', value);
+    }
+
+    /**
+     * Check if value is traversable
+     *
+     * @param  Array|Object  value
+     * @return {Boolean}
+     */
+    function isTraversable(value) {
+        return isArray(value) || isObject(value);
+    }
+
+    /**
      * Slice arguments
      */
     function slice(args, begin, end) {
         return Array.prototype.slice.call(args, begin, end);
-    }
-
-    /**
-     * Apply function on each data element
-     */
-    function forEach(data, func) {
-        var i, length = data.length;
-        for (i = 0; i < length; i++) {
-            func(data[i], i);
-        }
     }
 
     /**
@@ -40,6 +61,17 @@
     }
 
     /**
+     * Check if object has its own property
+     * @param  {[type]}  key
+     * @return {Boolean}
+     */
+    function has(key) {
+        return function (obj) {
+            return obj.hasOwnProperty(key);
+        }
+    }
+
+    /**
      * Return first element from array
      */
     function first(array) {
@@ -51,20 +83,6 @@
      */
     function maybe(value, fn) {
         return value === null || value === undefined ? value : fn(value);
-    }
-
-    /**
-     * Check if value is array
-     */
-    function isArray(value) {
-        return is('array', value);
-    }
-
-    /**
-     * Check if value is object
-     */
-    function isObject(value) {
-        return is('object', value);
     }
 
     /**
@@ -139,9 +157,9 @@
         args = slice(arguments, 1);
         var result = map(args, function(args) {
             switch(args && args.length) {
-                case 0:  return func();
-                case 1:  return func(args[0]);
-                case 2:  return func(args[0], args[1]);
+                case 0:  return func.call(func);
+                case 1:  return func.call(func, args[0]);
+                case 2:  return func.call(func, args[0], args[1]);
                 default: return func.apply(null, args);
             }
         });
@@ -185,6 +203,29 @@
     }
 
     /**
+     * Apply function on each data element
+     */
+    function forEach(data, func) {
+        var i, length, hasProp;
+        switch(true) {
+            case isArray(data):
+                length = data.length;
+                for (i = 0; i < length; i++) {
+                    func(data[i], i);
+                }
+                break;
+
+            case isObject(data):
+                for (i in data) {
+                    if (data.hasOwnProperty(i)) {
+                        func(data[i], i);
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
      * Map function
      *
      * Examples:
@@ -204,6 +245,32 @@
             })
         });
         return data.length > 1 ? result : first(result);
+    }
+
+    /**
+     * Traverse on object
+     * @param  {Function} obj
+     * @param  {Function} func
+     * @param  {Function} isNested
+     */
+    function traverse(obj, func, isNested) {
+        if (!isFunction(func)) {
+            throw TypeError('second argument is not a function');
+        }
+        isNested = isFunction(isNested) ? isNested : isTraversable;
+
+        var eachFunction = curry(flip(forEach));
+        var eachItem = eachFunction(function(item, k){
+            var shoudlTraverse = isNested(item, k);
+            if (true === shoudlTraverse) {
+                eachItem(item);
+            } else if (isTraversable(shoudlTraverse)) {
+                eachItem(shoudlTraverse);
+            } else {
+                func(item, k);
+            }
+        });
+        eachItem(obj);
     }
 
     /**
@@ -288,6 +355,17 @@
     }
 
     /**
+     * Flip order of arguments when invoking function
+     * @param  Function func
+     * @return Function
+     */
+    function flip(func) {
+        return function(arg1, arg2) {
+            return apply(func, slice(arguments).reverse());
+        }
+    }
+
+    /**
      * Return value function
      * Example: returnValue(1) -> 1
      */
@@ -306,25 +384,30 @@
     }
 
     // in alphabetical order
-    exports.apply       = apply;
-    exports.applyc      = applyc;
-    exports.compose     = compose;
-    exports.curry       = curry;
-    exports.fill        = fill;
-    exports.filter      = filter;
-    exports.forEach     = forEach;
-    exports.get         = get;
-    exports.invoke      = invoke;
-    exports.is          = is;
-    exports.isArray     = isArray;
-    exports.isObject    = isObject;
-    exports.map         = map;
-    exports.maybe       = maybe;
-    exports.memoize     = memoize;
-    exports.mValue      = mValue;
-    exports.reduce      = reduce;
-    exports.transpose   = transpose;
-    exports.returnValue = returnValue;
-    exports.slice       = slice;
+    exports.apply         = apply;
+    exports.applyc        = applyc;
+    exports.compose       = compose;
+    exports.curry         = curry;
+    exports.fill          = fill;
+    exports.filter        = filter;
+    exports.flip          = flip;
+    exports.forEach       = forEach;
+    exports.get           = get;
+    exports.has           = has;
+    exports.invoke        = invoke;
+    exports.is            = is;
+    exports.isArray       = isArray;
+    exports.isFunction    = isFunction;
+    exports.isObject      = isObject;
+    exports.isTraversable = isTraversable;
+    exports.map           = map;
+    exports.maybe         = maybe;
+    exports.memoize       = memoize;
+    exports.mValue        = mValue;
+    exports.reduce        = reduce;
+    exports.transpose     = transpose;
+    exports.traverse      = traverse;
+    exports.returnValue   = returnValue;
+    exports.slice         = slice;
 
 })(exports || this);

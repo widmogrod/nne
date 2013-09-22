@@ -12,6 +12,16 @@ describe('Functional', function(){
             f.is('Number', Number(123)).should.be.ok;
         })
     })
+    describe('#isObject()', function(){
+        it('should return false when the value is not an object', function(){
+            f.isObject("1").should.not.be.ok;
+            f.isObject([]).should.not.be.ok;
+            f.isObject(1).should.not.be.ok;
+        })
+        it('should return true when the value is an object', function(){
+            f.isObject({}).should.be.ok;
+        })
+    })
     describe('#slice()', function(){
         it('should return array when passed arguments', function(){
             (function(){
@@ -58,6 +68,14 @@ describe('Functional', function(){
             })
             looped.should.be.eql(3);
         })
+        it('should loop through object', function(){
+            var looped = 0;
+            var data = {a: [1,2,3], b: {c:1}, d:[]};
+            f.forEach(data, function(i) {
+                looped++;
+            })
+            looped.should.be.eql(3);
+        })
     })
     describe('#map()', function(){
         var addOne = function(i) {return i + 1; };
@@ -69,6 +87,59 @@ describe('Functional', function(){
         })
         it('should return array with values added', function(){
             f.map([1, 2, 3], [3, 4, 5], addOne).should.be.eql([[2, 3, 4],[4,5,6]]);
+        })
+    })
+    describe('#traverse()', function(){
+        var data;
+        beforeEach(function(){
+            data = [
+                {
+                    name: 'persons',
+                    data: ['a','b','c','d'],
+                    connections: [
+                        {
+                            name: 'distributed_person',
+                            connections: [
+                                {
+                                    name: 'merging',
+                                    data: [
+                                        {
+                                            '@ref': 'distriuted_relation'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: 'relation',
+                    connections: [
+                        {
+                            name: 'distriuted_relation',
+                        }
+                    ]
+                }
+            ];
+        })
+        it('should traverse for each leaf', function(){
+            var count = 0;
+            f.traverse(data, function(item){
+                ++count;
+            });
+            count.should.be.eql(10)
+        })
+        it.only('should traverse for each children', function(){
+            f.traverse(data, function(item){
+                console.log(item);
+            }, function(item, key) {
+                if (f.isArray(item)) {
+                    return true;
+                }
+                if (f.isObject(item) && f.has('connections')(item)){
+                    return f.get('connections')(item)
+                }
+            });
         })
     })
     describe('#curry()', function(){
@@ -139,6 +210,13 @@ describe('Functional', function(){
 
             result.should.be.Array;
             result.should.be.eql([1, 2]);
+        })
+    })
+    describe('#flip()', function(){
+        it('should return function that accept arguments in reversed order', function(){
+            var funcReturnSecond = function(a,b) {return b};
+            funcReturnSecond('a', 'b').should.be.eql('b');
+            f.flip(funcReturnSecond)('a', 'b').should.be.eql('a');
         })
     })
     describe('#get()', function(){
