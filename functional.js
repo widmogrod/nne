@@ -86,6 +86,15 @@
     }
 
     /**
+     * Return negation of the value returned by function
+     */
+    function not(func) {
+        return function() {
+            return ! apply(func, arguments);
+        };
+    }
+
+    /**
      * Transpose array, optionally apply function on each item;
      *
      * Examples:
@@ -259,16 +268,23 @@
         }
         isNested = isFunction(isNested) ? isNested : isTraversable;
 
+        var level = 0;
         var eachFunction = curry(flip(forEach));
         var eachItem = eachFunction(function(item, k){
             var shoudlTraverse = isNested(item, k);
+
+            func(item, k, level++);
+
             if (true === shoudlTraverse) {
+                // Traverse this item
                 eachItem(item);
             } else if (isTraversable(shoudlTraverse)) {
+                // Travers item returned from validation function rather than current item
+                // Thanks to that, we can customize our traverser to walk on specific records
                 eachItem(shoudlTraverse);
-            } else {
-                func(item, k);
             }
+
+            --level;
         });
         eachItem(obj);
     }
@@ -400,6 +416,7 @@
     exports.isFunction    = isFunction;
     exports.isObject      = isObject;
     exports.isTraversable = isTraversable;
+    exports.not           = not;
     exports.map           = map;
     exports.maybe         = maybe;
     exports.memoize       = memoize;

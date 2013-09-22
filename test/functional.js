@@ -122,24 +122,40 @@ describe('Functional', function(){
                 }
             ];
         })
-        it('should traverse for each leaf', function(){
+        it('should traverse for every element', function(){
             var count = 0;
             f.traverse(data, function(item){
                 ++count;
             });
-            count.should.be.eql(10)
+            count.should.be.eql(21)
         })
-        it.only('should traverse for each children', function(){
-            f.traverse(data, function(item){
-                console.log(item);
-            }, function(item, key) {
-                if (f.isArray(item)) {
-                    return true;
+        // it('should traverse for each leaf', function(){
+        //     var count = 0;
+        //     f.traverse(data, function(item){
+        //         console.log(item);
+        //         ++count;
+        //     }, function(item) {
+        //         f.is()
+        //     });
+        //     count.should.be.eql(10)
+        // })
+        it('should traverse for each children', function(){
+            var count = 0;
+            f.traverse(
+                data,
+                function(item, k, level){
+                    ++count;
+                },
+                function(item, key) {
+                    if (f.isArray(item)) {
+                        return true;
+                    }
+                    if (f.isObject(item) && f.has('connections')(item)){
+                        return f.get('connections')(item)
+                    }
                 }
-                if (f.isObject(item) && f.has('connections')(item)){
-                    return f.get('connections')(item)
-                }
-            });
+            );
+            count.should.be.eql(5);
         })
     })
     describe('#curry()', function(){
