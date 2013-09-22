@@ -129,16 +129,15 @@ describe('Functional', function(){
             });
             count.should.be.eql(21)
         })
-        // it('should traverse for each leaf', function(){
-        //     var count = 0;
-        //     f.traverse(data, function(item){
-        //         console.log(item);
-        //         ++count;
-        //     }, function(item) {
-        //         f.is()
-        //     });
-        //     count.should.be.eql(10)
-        // })
+        it('should traverse for each leaf', function(){
+            var count = 0;
+            f.traverse(data, function(item){
+                if (this.isLeaf) {
+                    ++count;
+                }
+            });
+            count.should.be.eql(10)
+        })
         it('should traverse for each children', function(){
             var count = 0;
             f.traverse(

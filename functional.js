@@ -272,15 +272,19 @@
         var eachFunction = curry(flip(forEach));
         var eachItem = eachFunction(function(item, k){
             var shoudlTraverse = isNested(item, k);
+            var context = {
+                level: level++,
+                isLeaf: !shoudlTraverse
+            };
 
-            func(item, k, level++);
+            func.call(context, item, k);
 
             if (true === shoudlTraverse) {
                 // Traverse this item
                 eachItem(item);
             } else if (isTraversable(shoudlTraverse)) {
                 // Travers item returned from validation function rather than current item
-                // Thanks to that, we can customize our traverser to walk on specific records
+                // Thanks to that, we can customize our traverser to walk on specific nodes
                 eachItem(shoudlTraverse);
             }
 
