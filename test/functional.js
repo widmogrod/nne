@@ -142,7 +142,7 @@ describe('Functional', function(){
             var count = 0;
             f.traverse(
                 data,
-                function(item, k, level){
+                function(item){
                     ++count;
                 },
                 function(item, key) {
