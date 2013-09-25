@@ -97,4 +97,14 @@
     (mAddOne)(mAddOne)(mDisplay)
     (mValue(10));
 
+    // Output:
+    // A 10
+    // B 10
+    // [Function: monadic]
+    // short
+    // mDisplay 11
+    // long
+    // mDisplay 12
+    // mDisplay 14
+
 })();
