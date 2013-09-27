@@ -169,7 +169,7 @@
                 case 0:  return func.call(func);
                 case 1:  return func.call(func, args[0]);
                 case 2:  return func.call(func, args[0], args[1]);
-                default: return func.apply(null, args);
+                default: return func.apply(func, args);
             }
         });
         return args.length > 1 ? result : first(result);
