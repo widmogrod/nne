@@ -119,6 +119,32 @@
         }
     }
 
+    function mStateValue(value) {
+        return function monadic(state) {
+            return {value: value, state: state};
+        }
+    }
+
+    function mBindState(mState, func) {
+        return function(state) {
+            var v, s, r;
+            r = mState(state);
+            v = r.value;
+            s = r.state;
+            // For function aware of state
+            // return func(v)(s);
+            // For function un-aware of state
+            return mStateValue(func(v))(s);
+        }
+    }
+
+    function consume(obj, prop) {
+        return function eat(func) {
+            obj[prop] = obj[prop] ? postphone(obj[prop], func) : func;
+            return consume(obj, prop);
+        }
+    }
+
     function mConsume(state) {
         return function eat(func) {
             state.one = state.one ? postphone(state.one, func) : func;
@@ -154,39 +180,19 @@
 
     var event = {
         queue: {},
-        one: null,
         on: function(name) {
-            if (!this.queue[name]) {
-                this.queue[name] = [];
-            }
-            return mConsume(this);
-
-            // this.queue[name].push(mConsume());
-            // return self.one = function a(func) {
-            //     if (func.name === 'monadic') {
-            //         return func;
-            //     }
-
-            //     return self.one = postphone(self.one, func);
-            // };
-
-            // return this.queue[name][this.queue[name].length - 1];
+            this.queue[name] = this.queue[name] ? this.queue[name] : [];
+            return consume(this.queue[name], this.queue[name].length);
         },
         trigger: function(name, value) {
-            // if (!this.queue[name]) {
-            //     return;
-            // }
-
-            console.log('one', this.one(value));
-            return;
-
-            for(var i = 0, length = this.queue[name].length; i < length; i++) {
-                console.log('i', i, name, this.queue[name][i](value)());
+            var i = 0, length = this.queue[name].length;
+            for (; i < length; i++) {
+                this.queue[name][i](value);
             }
         }
     };
 
-    event.on('click')(mAddOne)(mDisplay)(mAddOne)(mDisplay);
+    event.on('click')(mAddOne)(mDisplay)(mAddOne)(mAddOne)(mDisplay);
     event.trigger('click', mValue(10));
 
 }());
