@@ -108,3 +108,85 @@
     // mDisplay 14
 
 })();
+
+
+(function(){
+    console.log('promise monad ?')
+
+    function mValue(state) {
+        return function monadic() {
+            return state;
+        }
+    }
+
+    function mConsume(state) {
+        return function eat(func) {
+            state.one = state.one ? postphone(state.one, func) : func;
+            return mConsume(state);
+        }
+    }
+
+    function mAddOne(mv) {
+        return mValue(mv() + 1) ;
+    }
+
+    function mDisplay(mv) {
+        console.log('mDisplay', mv());
+        return mv;
+    }
+
+    function postphone(func, next) {
+        if (next.name === 'monadic') {
+            return func(next);
+        }
+
+        return function postphoned(forward) {
+            if (forward.name === 'monadic') {
+                return next(func(forward));
+            } else {
+                return postphone(
+                    postphone(func, next),
+                    forward
+                );
+            }
+        }
+    }
+
+    var event = {
+        queue: {},
+        one: null,
+        on: function(name) {
+            if (!this.queue[name]) {
+                this.queue[name] = [];
+            }
+            return mConsume(this);
+
+            // this.queue[name].push(mConsume());
+            // return self.one = function a(func) {
+            //     if (func.name === 'monadic') {
+            //         return func;
+            //     }
+
+            //     return self.one = postphone(self.one, func);
+            // };
+
+            // return this.queue[name][this.queue[name].length - 1];
+        },
+        trigger: function(name, value) {
+            // if (!this.queue[name]) {
+            //     return;
+            // }
+
+            console.log('one', this.one(value));
+            return;
+
+            for(var i = 0, length = this.queue[name].length; i < length; i++) {
+                console.log('i', i, name, this.queue[name][i](value)());
+            }
+        }
+    };
+
+    event.on('click')(mAddOne)(mDisplay)(mAddOne)(mDisplay);
+    event.trigger('click', mValue(10));
+
+}());
