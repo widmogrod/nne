@@ -1,4 +1,6 @@
 (function(){
+    "use strict";
+
     console.log('forward stream');
 
     function mValue(state) {
@@ -23,6 +25,7 @@
 })();
 
 (function(){
+    "use strict";
     console.log('reverse stream');
 
     function mValue(state) {
@@ -109,8 +112,11 @@
 
 })();
 
+var f = require('./functional.js');
 
 (function(){
+    "use strict";
+
     console.log('promise monad ?')
 
     function mValue(state) {
