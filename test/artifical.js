@@ -1,4 +1,5 @@
 var a = require('../artificial.js');
+var f = require('../functional.js');
 
 describe('Artificial', function(){
     describe('#activeteNeuron()', function(){
@@ -44,7 +45,7 @@ describe('Artificial', function(){
             ]);
         })
     })
-    describe('#topographyMap()', function(){
+    describe('#topography()', function(){
         var topography, data;
         beforeEach(function() {
             topography = [
@@ -64,9 +65,7 @@ describe('Artificial', function(){
                                     name: 'merging',
                                     neurons: 6,
                                     type: 'hidden',
-                                    data: [
-                                        {'@ref': 'distriuted_relation'}
-                                    ],
+                                    '@from': ['distriuted_relation'],
                                     connections: [
                                         {
                                             name: 'output',
@@ -88,6 +87,7 @@ describe('Artificial', function(){
                             name: 'distriuted_relation',
                             neurons: 4,
                             type: 'hidden',
+                            // '@to': ['merging'],
                         }
                     ]
                 }
@@ -100,7 +100,17 @@ describe('Artificial', function(){
             };
         })
         it('should return delta error for given neuron with one connection', function(){
-            a.topographyMap(topography, data)
+            topography = a.topography(topography);
+            f.traverse(topography, function(item) {
+                console.log("\n\nitem:",item);
+            }, function(item, key) {
+                if (f.isArray(item)) {
+                    return true;
+                }
+                if (f.isObject(item) && f.has('connections')(item)){
+                    return f.get('connections')(item)
+                }
+            })
         })
     })
 });
